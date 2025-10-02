@@ -25,7 +25,7 @@ import { MenuItemsType, SideMenuPropsType } from './sideMenu.types';
 
 const menuItems: MenuItemsType[] = [
   {
-    title: 'Scoreboard',
+    title: 'scoreboard',
     icon: faTrophy,
     id: ItemsIdentifiersEnum.pingPongRaw
   },
@@ -40,7 +40,7 @@ const menuItems: MenuItemsType[] = [
   //   id: ItemsIdentifiersEnum.pingPongService
   // },
   {
-    title: 'xPEPE Game',
+    title: 'xPEPE game',
     icon: faGamepad,
     id: ItemsIdentifiersEnum.signMessage
   },
@@ -90,7 +90,7 @@ export const SideMenu = ({ setIsOpen }: SideMenuPropsType) => {
   return (
     <div className={styles.sideMenuContainer}>
       <div className={styles.sideMenuHeader}>
-        <h2 className={styles.sideMenuHeaderTitle}>Library</h2>
+        <h2 className={styles.sideMenuHeaderTitle}>library</h2>
 
         <FontAwesomeIcon
           icon={faChevronUp}

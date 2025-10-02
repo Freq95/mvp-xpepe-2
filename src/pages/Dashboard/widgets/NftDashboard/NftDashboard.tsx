@@ -1,4 +1,3 @@
-// --- file: src/pages/Dashboard/widgets/NftDashboard/NftDashboard.tsx
 import React, { useEffect, useState } from "react";
 import { useGetAccount, useGetLoginInfo, useGetNetworkConfig } from "lib";
 import { OutputContainer, Button } from "components";
@@ -13,7 +12,7 @@ type Nft = {
 export function NftDashboard(): JSX.Element {
   const { address } = useGetAccount();
   const { isLoggedIn } = useGetLoginInfo();
-  const { network } = useGetNetworkConfig(); // aici ai apiAddress corect pt devnet/mainnet
+  const { network } = useGetNetworkConfig();
 
   const [nfts, setNfts] = useState<Nft[]>([]);
   const [loading, setLoading] = useState(false);
@@ -26,7 +25,7 @@ export function NftDashboard(): JSX.Element {
       const data = await res.json();
       setNfts(data);
     } catch (e) {
-      console.error("Eroare la fetch NFTs:", e);
+      console.error("error fetching NFTs:", e);
     } finally {
       setLoading(false);
     }
@@ -39,7 +38,7 @@ export function NftDashboard(): JSX.Element {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">NFT Dashboard</h3>
+        <h3 className="font-semibold"></h3>
         <Button onClick={fetchNfts} disabled={!isLoggedIn}>
           Refresh
         </Button>
@@ -47,7 +46,7 @@ export function NftDashboard(): JSX.Element {
 
       <OutputContainer>
         <div className="text-xs opacity-70 mb-2">
-          {isLoggedIn && address ? `Wallet: ${address}` : "Niciun wallet conectat"}
+          {isLoggedIn && address ? `` : "no wallet connected"}
         </div>
 
         {!isLoggedIn && (
@@ -65,7 +64,7 @@ export function NftDashboard(): JSX.Element {
                 <img
                   src={nft.media?.[0]?.url || "/placeholder.png"}
                   alt={nft.name}
-                  className="w-full h-32 object-cover rounded"
+                  className="w-full h-45 object-cover rounded"
                 />
                 <div className="mt-2 text-sm font-medium">{nft.name}</div>
                 <div className="text-xs opacity-60">{nft.collection}</div>
@@ -73,7 +72,7 @@ export function NftDashboard(): JSX.Element {
             ))}
           </div>
         ) : (
-          !loading && <div className="text-sm opacity-60">Nu ai NFT-uri în acest wallet.</div>
+          !loading && <div className="text-sm opacity-60">no NFT in this wallet</div>
         )}
       </OutputContainer>
     </div>

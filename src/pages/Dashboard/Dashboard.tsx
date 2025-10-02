@@ -19,28 +19,28 @@ import {
   PingPongService,
   SignMessage,
   Transactions,
-  ScoreboardRaw,
-  Top10Scoreboard
-  // Top10Debug
+  Top10Scoreboard,
+  MarketAnalysis
 } from './widgets';
 
 const dashboardWidgets: WidgetType[] = [
-  {
-    title: 'Ping & Pong (Manual)',
-    widget: PingPongRaw,
-    description:
-      'Smart Contract interactions using manually formulated transactions',
-    reference:
-      'https://docs.multiversx.com/sdk-and-tools/indices/es-index-transactions/'
-  },
-  {
-    title: 'Ping & Pong (ABI)',
-    widget: PingPongAbi,
-    description:
-      'Smart Contract interactions using the ABI generated transactions',
-    reference:
-      'https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-cookbook/#using-interaction-when-the-abi-is-available'
-  },
+  // {
+  //   title: 'Ping & Pong (Manual)',
+  //   widget: PingPongRaw,
+  //   description:
+  //     'Smart Contract interactions using manually formulated transactions',
+  //   reference:
+  //     'https://docs.multiversx.com/sdk-and-tools/indices/es-index-transactions/'
+  // },
+  // {
+  //   title: 'Ping & Pong (ABI)',
+  //   widget: PingPongAbi,
+  //   description:
+  //     'Smart Contract interactions using the ABI generated transactions',
+  //   reference:
+  //     'https://docs.multiversx.com/sdk-and-tools/sdk-js/sdk-js-cookbook/#using-interaction-when-the-abi-is-available'
+  // },
+ 
   // {
   //   title: 'Ping & Pong (Backend)',
   //   widget: PingPongService,
@@ -76,20 +76,38 @@ const dashboardWidgets: WidgetType[] = [
   //   reference:
   //     'https://api.multiversx.com/#/accounts/AccountController_getAccountTransactions'
   // },
-  // {
-  //   title: 'Transactions (Ping & Pong)',
-  //   widget: (props) => (
-  //     <Transactions identifier='transactions-ping-pong' {...props} />
-  //   ),
-  //   description: 'Mini-game integrat în dashboard',
-  //   reference: 'https://youtube.com' // sau lasă gol
-  // },
+   {
+    title: 'NFT dashboard',
+    widget: NftDashboard,
+    description: '',
+    reference: 'https://api.multiversx.com/#/accounts/AccountController_getAccountNfts'
+  },
   {
-  title: 'Scoreboard (Choice)',
+  title: 'xPEPE game',
   widget: GameScoreSubmitOnChoice,
-  description: 'După game-over, userul alege dacă trimite scorul',
+  description: '',
   reference: 'https://docs.multiversx.com/developers/smart-contracts/'
-},
+  },
+  {
+    title: 'top 10 scoreboard',
+    widget: Top10Scoreboard,
+    description: '',
+    reference: 'https://docs.multiversx.com/developers/smart-contracts/'
+  },
+  {
+    title: 'wallet transactions',
+    widget: (props) => (
+      <Transactions identifier='transactions-ping-pong' {...props} />
+    ),
+    description: '',
+    reference: 'https://youtube.com' // sau lasă gol
+  },
+  {
+    title: 'market analysis',
+    widget: MarketAnalysis,
+    description: '',
+    reference: 'https://docs.multiversx.com/developers/smart-contracts/'
+  },
 ];
 
 export const Dashboard = () => {

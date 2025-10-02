@@ -8,7 +8,7 @@ export const Top10Scoreboard: React.FC = () => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">Top 10 (getTop)</h3>
+        <h3 className="font-semibold"></h3>
         <Button onClick={refresh}>Refresh</Button>
       </div>
       <OutputContainer>

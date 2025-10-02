@@ -44,7 +44,7 @@ export const Account = () => {
           className={styles.connectedAccountDetailsIcon}
         />
       ),
-      label: 'Address',
+      label: 'address',
       value: (
         <MvxTrim
           dataTestId='accountAddress'
@@ -55,7 +55,7 @@ export const Account = () => {
     },
     {
       icon: herotag ? img || herotag.slice(0, 3) : '@',
-      label: 'Herotag',
+      label: 'herotag',
       value: <Username />
     },
     {
@@ -65,12 +65,12 @@ export const Account = () => {
           className={styles.connectedAccountDetailsIcon}
         />
       ),
-      label: 'Shard',
+      label: 'shard',
       value: <span data-testid={DataTestIdsEnum.addressShard}>{shard}</span>
     },
     {
       icon: <XLogo className={styles.connectedAccountDetailsXLogo} />,
-      label: 'Balance',
+      label: 'balance',
       value: (
         <FormatAmount
           value={balance}
@@ -87,7 +87,7 @@ export const Account = () => {
     <div className={styles.connectedAccountContainer}>
       <div className={styles.connectedAccountHeader}>
         <h2 className={styles.connectedAccountHeaderTitle}>
-          Connected account details
+          connected account details
         </h2>
 
         <FontAwesomeIcon

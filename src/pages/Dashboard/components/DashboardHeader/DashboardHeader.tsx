@@ -17,7 +17,7 @@ const styles = {
 
 export const DashboardHeader = () => (
   <div className={styles.dashboardHeaderContainer}>
-    <div className={styles.dashboardHeaderTitle}>Welcome to xPEPE dApp</div>
+    <div className={styles.dashboardHeaderTitle}>welcome to xPEPE dApp</div>
 
     <div className={styles.dashboardHeaderDescription}>
       <span className={styles.dashboardHeaderDescriptionText}>

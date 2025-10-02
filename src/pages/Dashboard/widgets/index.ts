@@ -5,3 +5,5 @@ export * from './PingPongRaw';
 export * from './PingPongService';
 export * from './SignMessage';
 export * from './Transactions';
+export * from './Top10Scoreboard';
+export * from './MarketAnalysis';
