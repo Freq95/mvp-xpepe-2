@@ -1,0 +1,161 @@
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.91.0-nightly",
+            "commitHash": "2fd855fbfc8239285aa2d596f76a8cc75e17ce02",
+            "commitDate": "2025-08-07",
+            "channel": "Nightly",
+            "short": "rustc 1.91.0-nightly (2fd855fbf 2025-08-07)"
+        },
+        "contractCrate": {
+            "name": "scoreboard",
+            "version": "0.0.1"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.56.1"
+        }
+    },
+    "name": "Scoreboard",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "min_fee",
+                "type": "BigUint"
+            }
+        ],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "submitScore",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "EGLD"
+            ],
+            "inputs": [
+                {
+                    "name": "score",
+                    "type": "u32"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "ownerWithdraw",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "ownerWithdrawAll",
+            "mutability": "mutable",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "setMinFee",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "new_fee",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getBest",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "addr",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u32"
+                }
+            ]
+        },
+        {
+            "name": "getMinFee",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getOwner",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "getTop",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<tuple<Address,u32>>",
+                    "multi_result": true
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "score_submitted",
+            "inputs": [
+                {
+                    "name": "addr",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "score",
+                    "type": "u32",
+                    "indexed": true
+                },
+                {
+                    "name": "payment",
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "identifier": "withdrawn",
+            "inputs": [
+                {
+                    "name": "to",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                }
+            ]
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {}
+}

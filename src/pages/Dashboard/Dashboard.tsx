@@ -1,20 +1,28 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import { DashboardHeader, LeftPanel, Widget } from './components';
 
 import { contractAddress } from 'config';
 import { WidgetType } from 'types/widget.types';
+import { contractAddressScoreBoard } from 'config';
+import DinoGameComponent from '../../components/Xpepe/Xpepe';
+import { GameScoreSubmitOnChoice } from './widgets/SubmitGameScore';
+import { NftDashboard } from './widgets/NftDashboard';
+import styles from './dashboard.styles';
 
-import { DashboardHeader, LeftPanel, Widget } from './components';
 import {
+  Account,
   BatchTransactions,
   NativeAuth,
   PingPongAbi,
   PingPongRaw,
   PingPongService,
   SignMessage,
-  Transactions
+  Transactions,
+  ScoreboardRaw,
+  Top10Scoreboard
+  // Top10Debug
 } from './widgets';
-import styles from './dashboard.styles';
 
 const dashboardWidgets: WidgetType[] = [
   {
@@ -73,11 +81,15 @@ const dashboardWidgets: WidgetType[] = [
   //   widget: (props) => (
   //     <Transactions identifier='transactions-ping-pong' {...props} />
   //   ),
-  //   props: { receiver: contractAddress },
-  //   description: 'List transactions filtered for a given Smart Contract',
-  //   reference:
-  //     'https://api.multiversx.com/#/accounts/AccountController_getAccountTransactions'
-  // }
+  //   description: 'Mini-game integrat în dashboard',
+  //   reference: 'https://youtube.com' // sau lasă gol
+  // },
+  {
+  title: 'Scoreboard (Choice)',
+  widget: GameScoreSubmitOnChoice,
+  description: 'După game-over, userul alege dacă trimite scorul',
+  reference: 'https://docs.multiversx.com/developers/smart-contracts/'
+},
 ];
 
 export const Dashboard = () => {
