@@ -42,11 +42,11 @@ export const Footer = () => {
         </div>
 
         <div className={styles.footerDescription}>
-          <span className={styles.footerDescriptionNetwork}>
+          {/* <span className={styles.footerDescriptionNetwork}>
             {network.id} Build
-          </span>
+          </span> */}
 
-          <span>{version}</span>
+          {/* <span>{version}</span> */}
         </div>
 
         <div className={styles.footerDescription}>

@@ -92,19 +92,9 @@ export function GameScoreSubmitOnChoice(): JSX.Element {
         <div className="flex flex-col gap-3">
           <DinoGameComponent onGameOver={handleGameOver} />
 
-          <div className="text-xs opacity-70">
-            {lastFinal !== null ? `Ultimul scor: ${lastFinal}` : 'Joacă o rundă și apoi apasă „Trimite”'}
-          </div>
-
           {!isLoggedIn && (
-            <div className="text-xs text-red-500">Conectează wallet-ul pentru a salva scorul on-chain.</div>
+            <div className="text-xs text-red-500">connect your wallet to save the score on-chain</div>
           )}
-
-          <div className="text-xs opacity-60">Min fee: {toEgld(minFeeWei, 6)} EGLD</div>
-
-          {isSubmitting && <div className="text-xs">Se trimite tranzacția…</div>}
-          {txOk && <div className="text-xs text-green-600">Scor trimis cu succes ✅</div>}
-          {txError && <div className="text-xs text-red-500">{txError}</div>}
         </div>
       </OutputContainer>
     </div>

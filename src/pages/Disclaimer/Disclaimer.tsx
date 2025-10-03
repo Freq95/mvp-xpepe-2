@@ -11,22 +11,22 @@ export const Disclaimer = () => (
 
     <div className={styles.disclaimerContent}>
       <p>
-        This template is provided "as is" and "as available", at your own risk,
-        without warranty of any kind, either expressed or implied, including but
-        not limited to warranties of title or implied warranties of
-        merchantability or fitness for a particular purpose. No oral advice or
-        written or electronically delivered information given by MultiversX or
-        its affiliates, or any of its staff, providers, merchants, sponsors or
-        licensors, or the like, shall create any warranty. Use this template is
-        at your sole risk.
+        This ain’t no financial advice, fren. xPEPE platform and memecoin are dropped here “as is” and “as available”, raw and unfiltered, no warranty, no promises, no hopium guarantees. Use at your own risk, ape responsibly.
+
+        No chat with the devs, no dank meme, no alpha leak shall magically create a warranty. If you click, stake, trade, play or hodl xPEPE, you do it with your own diamond hands (or paper hands, no judgement).
       </p>
       <p>
-        In no event shall MultiversX be liable for any injury, expenses, lost
-        profits, loss or damage, weather direct, indirect, incidental, or
-        consequential, or any other pecuniary loss or expense arising out of
-        your access, use or inability to use this template, even if we are
-        expressly advised of the possibility of such damages.
+        In no universe shall the xPEPE crew, community, or any random frog on the internet be liable for your losses, missed 100x pumps, rugged feelings, or tears in the bear market. Gains, losses, laughs – all on you, fren.
       </p>
+      <p>
+        You touch xPEPE, you accept the vibes, the memes, and the risks.
+      </p>
+        <p>
+          WAGMI? Maybe.
+          <p>NGMI? Also maybe.</p>
+          <p> Either way, we vibin’.</p>
+        </p>
+        
     </div>
   </div>
 );

@@ -1,10 +1,24 @@
-// --- file: src/pages/Dashboard/widgets/Top10Scoreboard/Top10Scoreboard.tsx
 import React from 'react';
 import { useGetTopScores } from 'hooks/transactions/useGetTopScores';
 import { Button, OutputContainer } from 'components';
+import { Address } from '@multiversx/sdk-core';
+
+function formatAddress(addr: string): string {
+  try {
+    if (addr.startsWith('erd1')) return addr; // deja bech32
+    let hex = addr;
+    if (addr.startsWith('0x')) {
+      hex = addr.slice(2); // scoatem "0x"
+    }
+    return new Address(hex).toBech32();
+  } catch {
+    return addr; // fallback
+  }
+}
 
 export const Top10Scoreboard: React.FC = () => {
   const { data, loading, error, refresh } = useGetTopScores();
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -27,7 +41,9 @@ export const Top10Scoreboard: React.FC = () => {
               {data?.map((r, i) => (
                 <tr key={r.address + r.score} className="border-t">
                   <td className="py-2 pr-2 w-10">{i + 1}</td>
-                  <td className="py-2 break-all font-mono">{r.address}</td>
+                  <td className="py-2 break-all font-mono">
+                    {formatAddress(r.address)}
+                  </td>
                   <td className="py-2 text-right font-semibold">{r.score}</td>
                 </tr>
               ))}

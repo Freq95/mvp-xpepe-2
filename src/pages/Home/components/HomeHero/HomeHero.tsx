@@ -12,7 +12,7 @@ import { ReactComponent as HomeLightThemeIcon } from 'assets/img/bright-light-ic
 import { ReactComponent as HomeVibeThemeIcon } from 'assets/img/bffrog-32.svg';
 import { ReactComponent as HomeDarkThemeIcon } from 'assets/icons/home-dark-theme-icon.svg';
 import { Button } from 'components';
-import { DOCUMENTATION_LINK, RouteNamesEnum } from 'localConstants';
+import { XPEPE_BUY_LINK, RouteNamesEnum } from 'localConstants';
 
 import styles from './homeHero.styles';
 
@@ -82,11 +82,11 @@ export const HomeHero = () => {
           <a
             target='_blank'
             rel='noreferrer'
-            href={DOCUMENTATION_LINK}
+            href={XPEPE_BUY_LINK}
             className={styles.heroSectionTopDocButton}
           >
             <span className={styles.heroSectionTopDocButtonText}>
-              See Documentation
+              Buy $xPEPE
             </span>
 
             <FontAwesomeIcon
