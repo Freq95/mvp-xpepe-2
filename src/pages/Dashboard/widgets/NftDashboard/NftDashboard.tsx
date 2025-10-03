@@ -55,7 +55,7 @@ export function NftDashboard(): JSX.Element {
           </div>
         )}
 
-        {loading && <div className="text-sm">Se încarcă NFT-urile...</div>}
+        {loading && <div className="text-sm">loading...</div>}
 
         {nfts.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

@@ -1,90 +1,43 @@
 import {
   faChevronUp,
-  faFilter,
-  faFingerprint,
   faGamepad,
   faImagePortrait,
-  faPenNib,
-  faRectangleList,
-  faStar,
-  faTableTennisPaddleBall,
-  faTrophy
+  faTrophy,
+  faWallet,
+  faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import { ReactComponent as IconBatch } from 'assets/img/batch-tx.svg';
-import { ReactComponent as IconAbi } from 'assets/img/ping-pong-abi.svg';
-import { ReactComponent as IconBackend } from 'assets/img/ping-pong-backend.svg';
-import { ItemsIdentifiersEnum } from 'pages/Dashboard/dashboard.types';
-
 import styles from './sideMenu.styles';
 import { ItemIcon } from './components';
-import { MenuItemsType, SideMenuPropsType } from './sideMenu.types';
 
-const menuItems: MenuItemsType[] = [
-  {
-    title: 'scoreboard',
-    icon: faTrophy,
-    id: ItemsIdentifiersEnum.pingPongRaw
-  },
-  // {
-  //   title: 'Ping & Pong (ABI)',
-  //   icon: IconAbi,
-  //   id: ItemsIdentifiersEnum.pingPongAbi
-  // },
-  // {
-  //   title: 'Ping & Pong (Backend)',
-  //   icon: IconBackend,
-  //   id: ItemsIdentifiersEnum.pingPongService
-  // },
-  {
-    title: 'xPEPE game',
-    icon: faGamepad,
-    id: ItemsIdentifiersEnum.signMessage
-  },
-  // {
-  //   title: 'Native auth',
-  //   icon: faFingerprint,
-  //   id: ItemsIdentifiersEnum.nativeAuth
-  // },
-  // {
-  //   title: 'Batch Transactions',
-  //   icon: IconBatch,
-  //   id: ItemsIdentifiersEnum.batchTransactions
-  // },
-  {
-    title: 'NFTs',
-    icon: faImagePortrait,
-    id: ItemsIdentifiersEnum.transactionsAll
-  },
-  // {
-  //   title: 'Transactions (Ping & Pong)',
-  //   icon: faFilter,
-  //   id: ItemsIdentifiersEnum.transactionsPingPong
-  // }
+type SideMenuPropsType = {
+  setIsOpen: (open: boolean) => void;
+  onSectionChange: (id: string) => void;
+};
+
+const menuItems = [
+  { title: 'scoreboard', icon: faTrophy, id: 'scoreboard' },
+  { title: 'xPEPE game', icon: faGamepad, id: 'xpepe' },
+  { title: 'NFTs', icon: faImagePortrait, id: 'nfts' },
+  { title: 'transactions', icon: faWallet, id: 'transactions' },
+  { title: 'market analysis', icon: faChartLine, id: 'market' }
 ];
 
-export const SideMenu = ({ setIsOpen }: SideMenuPropsType) => {
+export const SideMenu = ({ setIsOpen, onSectionChange }: SideMenuPropsType) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState(
-    ItemsIdentifiersEnum.pingPongRaw
-  );
+  const [activeItem, setActiveItem] = useState('scoreboard');
 
   const toggleCollapse = () => {
     setIsCollapsed((isCollapsed) => !isCollapsed);
   };
 
-  const handleMenuItemClick = (id: ItemsIdentifiersEnum) => {
+  const handleMenuItemClick = (id: string) => {
     setIsOpen(false);
-    const target = document.getElementById(id);
-    if (target) {
-      const y = target.getBoundingClientRect().top + window.scrollY - 250;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-
-      setActiveItem(id);
-    }
+    setActiveItem(id);
+    onSectionChange(id);
   };
 
   return (
@@ -115,7 +68,6 @@ export const SideMenu = ({ setIsOpen }: SideMenuPropsType) => {
             })}
           >
             {item.icon && <ItemIcon icon={item.icon} />}
-
             <div className={styles.sideMenuItemTitle}>{item.title}</div>
           </div>
         ))}

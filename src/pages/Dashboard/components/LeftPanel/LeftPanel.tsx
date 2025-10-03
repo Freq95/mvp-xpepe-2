@@ -25,11 +25,13 @@ import styles from './leftPanel.styles';
 interface LeftPanelPropsType {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  onSectionChange: (id: string) => void;
 }
 
 export const LeftPanel = ({
   isOpen = false,
-  setIsOpen
+  setIsOpen,
+  onSectionChange
 }: LeftPanelPropsType) => {
   const handleOpenPanel = () => {
     setIsOpen(!isOpen);
@@ -104,7 +106,7 @@ export const LeftPanel = ({
 
           <div className={styles.leftPanelBar} />
 
-          <SideMenu setIsOpen={setIsOpen} />
+          <SideMenu setIsOpen={setIsOpen} onSectionChange={onSectionChange} />
         </div>
       </div>
     </div>
