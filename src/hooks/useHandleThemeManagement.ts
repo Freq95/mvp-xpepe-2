@@ -11,7 +11,7 @@ export const useHandleThemeManagement = () => {
   const attributeHandle = 'data-mvx-theme';
 
   const allThemeOptions: ThemeOptionType[] = [
-    { identifier: 'mvx:dark-theme', label: 'mvx theme' },
+    { identifier: 'mvx:dark-theme', label: 'dark theme' },
     { identifier: 'mvx:vibe-theme', label: 'xpepe' },
     { identifier: 'mvx:light-theme', label: 'light theme' }
   ];

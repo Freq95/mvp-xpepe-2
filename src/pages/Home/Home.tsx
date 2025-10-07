@@ -13,7 +13,7 @@ export const Home = () => (
     <HomeHero />
     
     {/* //uncomment this for more content  */}
-    {/* <HomeConnect /> */}
+    <HomeConnect />
     <Outlet />
   </div>
 );

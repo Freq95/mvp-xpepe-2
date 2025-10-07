@@ -77,7 +77,7 @@ export const HomeHero = () => {
         </div>
 
         <div className={styles.heroSectionTopButtons}>
-          <Button onClick={handleLogIn}>Connect Wallet</Button>
+          <Button onClick={handleLogIn}>connect wallet</Button>
 
           <a
             target='_blank'
@@ -86,7 +86,7 @@ export const HomeHero = () => {
             className={styles.heroSectionTopDocButton}
           >
             <span className={styles.heroSectionTopDocButtonText}>
-              Buy $xPEPE
+              buy $xPEPE
             </span>
 
             <FontAwesomeIcon
