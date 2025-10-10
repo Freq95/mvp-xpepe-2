@@ -36,7 +36,7 @@ export const HomeConnect = () => {
       icon: Chart,
       title: 'charts and memes',
       description:
-        'explore the evolution of memes on multiversx blockchain',
+        'numbers lie, memes don’t',
       linkTitle: 'xPEPE chart',
       linkDownloadAddress: 'https://e-compass.io/token/XPEPE-0fd22a'
     },

@@ -71,7 +71,8 @@
   bottom: 0px;
   width: 17px;
   height: 35px;
-  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='17' height='35'><g fill='%23535353'><path d='M6 0h4v8h-4z'/><rect x='4' y='8' width='8' height='27'/><rect x='6' y='35' width='4' height='0'/><rect x='0' y='15' width='4' height='8'/><rect x='12' y='10' width='4' height='12'/></g></svg>") no-repeat;
+  /* background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='17' height='35'><g fill='%23535353'><path d='M6 0h4v8h-4z'/><rect x='4' y='8' width='8' height='27'/><rect x='6' y='35' width='4' height='0'/><rect x='0' y='15' width='4' height='8'/><rect x='12' y='10' width='4' height='12'/></g></svg>") no-repeat; */
+  background: url('../assets/img/cactus-32.svg') no-repeat center/contain;
 }
 
 /* .cactus.large {
@@ -87,7 +88,8 @@
   position: absolute;
   width: 46px;
   height: 40px;
-  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='40'><g fill='%23535353'><path d='M6 12h4v4H6zm4-4h8v4h-8zm8-4h12v4H18zm12 0h8v4h-8zm8 4h8v4h-8zm-20 8h12v4H18zm12 0h8v4h-8zm-16 4h8v4h-8zm-4 4h8v4H10zm16 0h12v4H26zm-8 4h4v4h-4zm8 0h8v4h-8z'/></g></svg>") no-repeat;
+  /* background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='40'><g fill='%23535353'><path d='M6 12h4v4H6zm4-4h8v4h-8zm8-4h12v4H18zm12 0h8v4h-8zm8 4h8v4h-8zm-20 8h12v4H18zm12 0h8v4h-8zm-16 4h8v4h-8zm-4 4h8v4H10zm16 0h12v4H26zm-8 4h4v4h-4zm8 0h8v4h-8z'/></g></svg>") no-repeat; */
+  background: url('../assets/img/dragon-32.svg') no-repeat center/contain;
   right: 0;
   animation: flyPterodactyl 0.3s ease-in-out infinite alternate;
 }

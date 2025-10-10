@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Vite](https://vitejs.dev/guide/).
 
-The **MultiversX dApp Template**, built using [React.js](https://reactjs.org/) and [Typescript](https://www.typescriptlang.org/).
+The **xPEPE dApp**, built using [React.js](https://reactjs.org/) and [Typescript](https://www.typescriptlang.org/).
 It's a basic implementation of [@multiversx/sdk-dapp](https://www.npmjs.com/package/@multiversx/sdk-dapp), providing the basics for MultiversX authentication and TX signing.
 
 See [Dapp template](https://template-dapp.multiversx.com/) for live demo.
@@ -120,7 +120,7 @@ pnpm start-devnet --force
 ```
 
 **Test URLs:**
-- **Template dApp**: https://localhost.multiversx.com
+- **xPEPE dApp**: https://localhost.multiversx.com
 
 ### Troubleshooting WebAuthn TLS Errors
 

@@ -70,7 +70,7 @@ export const ExtensionConnect = () => {
 
         <div className={styles.extensionCardDownloadSection}>
           <a
-            href={isFirefox ? FIREFOX_ADDON_LINK : CHROME_EXTENSION_LINK}
+            href={'https://xexchange.com/trade?firstToken=XPEPE-0fd22a&secondToken=EGLD'}
             target="_blank"
             className={styles.extensionCardLink}
           >
