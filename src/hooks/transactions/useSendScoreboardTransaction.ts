@@ -1,7 +1,7 @@
 // src/hooks/transactions/useSendScoreboardTransaction.ts
 import axios from 'axios';
 
-import { contractAddress } from 'config';
+import { contractAddressScoreBoard } from 'config';
 import { signAndSendTransactions } from 'helpers';
 import {
   AbiRegistry,
@@ -9,9 +9,14 @@ import {
   GAS_PRICE,
   SmartContractTransactionsFactory,
   TransactionsFactoryConfig,
+  Token,
+  TokenTransfer,
+  ProxyNetworkProvider,
+  SmartContractController,
   useGetAccount,
   useGetNetworkConfig
 } from 'lib';
+import scoreboardAbi from 'contracts/scoreboard.abi.json';
 
 const SCOREBOARD_TRANSACTION_INFO = {
   processingMessage: 'Sending score transaction...',
@@ -22,6 +27,7 @@ const SCOREBOARD_TRANSACTION_INFO = {
 export function useSendScoreboardTransaction() {
   const { network } = useGetNetworkConfig();
   const { address } = useGetAccount();
+  const proxy = new ProxyNetworkProvider(network.apiAddress);
 
   const getSmartContractFactory = async () => {
     const response = await axios.get('src/contracts/scoreboard.abi.json');
@@ -37,18 +43,39 @@ export function useSendScoreboardTransaction() {
   };
 
   async function submitScoreFromAbi(score: number, minFeeWei: string | bigint) {
-    console.log("DEBUG score de trimis:", score);
+    // Always use BigInt for ESDT transfer amount: NEVER use Number for ESDT base units
+    const bigIntFee = typeof minFeeWei === 'bigint' ? minFeeWei : BigInt(minFeeWei);
+    console.log("DEBUG submitScoreFromAbi: score:", score, "minFeeWei:", minFeeWei, "as BigInt:", bigIntFee);
 
     const scFactory = await getSmartContractFactory();
+    // fetch accepted token dynamically from SC
+    const abiForQuery = AbiRegistry.create(scoreboardAbi);
+    const scController = new SmartContractController({
+      chainID: network.chainId,
+      networkProvider: proxy,
+      abi: abiForQuery
+    });
+    const [paymentTokenValue] = await scController.query({
+      contract: new Address(contractAddressScoreBoard),
+      function: 'getPaymentToken',
+      arguments: []
+    });
+    const tokenIdentifier = String(paymentTokenValue?.valueOf?.() ?? '');
     
     const scoreTransaction = await scFactory.createTransactionForExecute(
       new Address(address),
       {
         gasLimit: BigInt(20_000_000),
         function: 'submitScore',
-        contract: new Address(contractAddress),
-        nativeTransferAmount: BigInt(minFeeWei),
-        arguments: [Number(score) >>> 0]
+        contract: new Address(contractAddressScoreBoard),
+        // send xPEPE ESDT payment instead of native EGLD
+        tokenTransfers: [
+          new TokenTransfer({
+            token: new Token({ identifier: tokenIdentifier }),
+            amount: bigIntFee
+          })
+        ],
+        arguments: [BigInt(Number(score) >>> 0)] // ENSURE this argument is also correct type
       }
     );
 
