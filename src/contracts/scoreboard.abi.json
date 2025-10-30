@@ -35,7 +35,7 @@
             "name": "submitScore",
             "mutability": "mutable",
             "payableInTokens": [
-                "EGLD"
+                "*"
             ],
             "inputs": [
                 {
@@ -95,6 +95,16 @@
             "outputs": [
                 {
                     "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getPaymentToken",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "TokenIdentifier"
                 }
             ]
         },
