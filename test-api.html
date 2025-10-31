@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Analytics API</title>
+</head>
+<body>
+    <h1>Analytics API Test</h1>
+    <button onclick="testAPI()">Test API Connection</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/health');
+                const data = await response.json();
+                resultDiv.innerHTML = `<pre>✅ API is working!\n${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>❌ Error: ${error.message}\n\nMake sure:\n1. Backend server is running on port 3001\n2. CORS is enabled\n3. No firewall blocking the connection</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>
+

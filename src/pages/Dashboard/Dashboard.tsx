@@ -9,13 +9,13 @@ import styles from './dashboard.styles';
 
 import {
   Transactions,
-  Top10Scoreboard,
-  MarketAnalysis
+  MarketAnalysis,
+  GameAnalytics
 } from './widgets';
 
 const widgetsBySection: Record<string, WidgetType[]> = {
   scoreboard: [
-    { title: 'top 10 scoreboard', widget: Top10Scoreboard, description: '', reference: '' }
+    { title: 'top players', widget: GameAnalytics, description: '', reference: '' }
   ],
   xpepe: [
     { title: 'xPEPE game', widget: GameScoreSubmitOnChoice, description: '', reference: '' }
@@ -28,7 +28,7 @@ const widgetsBySection: Record<string, WidgetType[]> = {
   ],
   market: [
     { title: 'market analysis', widget: MarketAnalysis, description: '', reference: '' }
-  ]
+  ],
 };
 
 export const Dashboard = () => {

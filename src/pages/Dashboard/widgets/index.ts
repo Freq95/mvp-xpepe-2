@@ -7,3 +7,4 @@ export * from './SignMessage';
 export * from './Transactions';
 export * from './Top10Scoreboard';
 export * from './MarketAnalysis';
+export * from './GameAnalytics';

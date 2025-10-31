@@ -1,3 +1,4 @@
+// --- file: src/config/sharedConfig.ts
 export const BATCH_TRANSACTIONS_SC = {
   egld_wEGLD: {
     contract: 'erd1qqqqqqqqqqqqqpgqpv09kfzry5y4sj05udcngesat07umyj70n4sa2c0rp',
@@ -26,4 +27,9 @@ export const nativeAuth = true;
 export const transactionSize = 10;
 
 // Generate your own WalletConnect 2 ProjectId here: https://cloud.walletconnect.com/app
-export const walletConnectV2ProjectId = '9b1a9564f91cb659ffe21b73d5c4e2d8';
+export const walletConnectV2ProjectId = '9b1a9564f91cb659ffe21b73d5c4f2b8';
+export const walletConnectDeepLink =
+  process.env.WALLET_CONNECT_DEEP_LINK ?? undefined;
+
+// API configuration
+export const ANALYTICS_API_URL = process.env.VITE_ANALYTICS_API_URL || 'http://localhost:3001';
