@@ -6,12 +6,23 @@ import { Address, useGetAccount, useGetLoginInfo } from 'lib';
 
 export const GameAnalytics: React.FC = () => {
   const { addresses, loading, error, refetch } = useGetAllAddresses();
-  const { data: topScores } = useGetTopScores();
+  const { data: topScores, refresh: refreshTopScores } = useGetTopScores();
   const { address: userAddress } = useGetAccount();
   const { isLoggedIn } = useGetLoginInfo();
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const { details, loading: detailsLoading } = useGetAddressDetails(selectedAddress);
+  
+  // Handler to refresh both backend addresses and on-chain scores
+  const handleRefresh = async () => {
+    console.log('🔄 Refresh button clicked - refreshing both sources...');
+    // Refresh both sources - await to ensure they complete
+    await Promise.all([
+      refetch(),
+      refreshTopScores()
+    ]);
+    console.log('✅ Refresh complete');
+  };
   
   // Helper function to normalize addresses to bech32 format
   const normalizeAddress = (addr: string): string => {
@@ -30,6 +41,7 @@ export const GameAnalytics: React.FC = () => {
   // Create a map of blockchain scores (from top 10 scoreboard)
   // Use both original and normalized addresses as keys
   const blockchainScoresMap = useMemo(() => {
+    console.log('🔄 Recomputing blockchainScoresMap, topScores:', topScores);
     const map = new Map<string, { score: number; position: number }>();
     if (topScores && topScores.length > 0) {
       topScores.forEach((item, index) => {
@@ -39,6 +51,7 @@ export const GameAnalytics: React.FC = () => {
         map.set(item.address.toLowerCase(), { score: item.score, position: index + 1 });
       });
     }
+    console.log('✅ blockchainScoresMap created with', map.size, 'entries');
     return map;
   }, [topScores]);
   
@@ -138,7 +151,7 @@ export const GameAnalytics: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold"></h3>
-          <Button onClick={refetch}>Refresh</Button>
+          <Button onClick={handleRefresh}>Refresh</Button>
         </div>
         <OutputContainer>
           <div className="text-center py-8 opacity-70">Loading...</div>
@@ -152,7 +165,7 @@ export const GameAnalytics: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold"></h3>
-          <Button onClick={refetch}>Refresh</Button>
+          <Button onClick={handleRefresh}>Refresh</Button>
         </div>
         <OutputContainer>
           <div className="text-center py-8 text-red-500">

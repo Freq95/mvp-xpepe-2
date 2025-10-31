@@ -69,12 +69,19 @@ export function useGetTopScores() {
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
+    console.log('🔄 Refreshing top scores from blockchain...');
     setLoading(true);
     setError(null);
     try {
-      setData(await queryAndParse(network.apiAddress));
+      const newData = await queryAndParse(network.apiAddress);
+      console.log('✅ Top scores fetched:', newData);
+      // Create a completely new array with new object references
+      const freshData = newData.map(item => ({ ...item }));
+      setData(freshData);
     } catch (e: any) {
+      console.error('❌ Error fetching top scores:', e);
       setError(e?.message || 'parse failed');
+      setData([]); // Clear data on error
     } finally {
       setLoading(false);
     }
