@@ -15,17 +15,7 @@ router.post('/', async (req, res) => {
       });
     }
 
-      const scoreValue = Number(score);
-      
-      // Ignore scores less than 100 - don't save them to database
-      if (scoreValue < 100) {
-        return res.status(200).json({
-          success: true,
-          data: null,
-          message: `Score ${scoreValue} ignored - only scores >= 100 are saved to database`
-        });
-      }
-
+    const scoreValue = Number(score);
     const sessionId = uuidv4();
     
     const session = new ScoringSession({

@@ -26,9 +26,32 @@ function pubkeyToBech32(pubkey: Uint8Array): string {
 // Robust decoder: supports both encodings
 // A) one big item (all tuples concatenated)
 // B) one item per tuple (most common for MultiValueEncoded of tuples)
-async function queryAndParse(api: string): Promise<TopItem[]> {
-  const url = `${api.replace(/\/$/, '')}/vm-values/query`;
-  const { data: resp } = await axios.post(url, { scAddress: contractAddressScoreBoard, funcName: 'getTop', args: [] });
+async function queryAndParse(api: string, forceRefresh = false): Promise<TopItem[]> {
+  // Add timestamp to URL to bust any URL-level caching
+  const timestamp = Date.now();
+  const url = `${api.replace(/\/$/, '')}/vm-values/query${forceRefresh ? `?_t=${timestamp}` : ''}`;
+  
+  // Request body - keep it clean for the API
+  const requestBody = { 
+    scAddress: contractAddressScoreBoard, 
+    funcName: 'getTop', 
+    args: [] 
+  };
+  
+  const config = forceRefresh ? {
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      'X-Request-Time': String(timestamp) // Custom header for cache busting
+    }
+  } : {};
+  
+  const { data: resp } = await axios.post(
+    url, 
+    requestBody,
+    config
+  );
   const rd: string[] = resp?.data?.data?.returnData || resp?.data?.returnData || resp?.returnData || [];
   if (!rd?.length) return [];
 
@@ -68,16 +91,45 @@ export function useGetTopScores() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(async () => {
-    console.log('🔄 Refreshing top scores from blockchain...');
+  const refresh = useCallback(async (forceRefresh = true) => {
+    console.log('🔄 Refreshing top scores from blockchain...', forceRefresh ? '(forced, cache-busted)' : '');
     setLoading(true);
     setError(null);
+    
+    // Store previous data for comparison
+    let previousData: TopItem[] = [];
+    setData(prev => {
+      previousData = prev;
+      return []; // Clear immediately to show loading state
+    });
+    
     try {
-      const newData = await queryAndParse(network.apiAddress);
+      const newData = await queryAndParse(network.apiAddress, forceRefresh);
       console.log('✅ Top scores fetched:', newData);
-      // Create a completely new array with new object references
-      const freshData = newData.map(item => ({ ...item }));
-      setData(freshData);
+      
+      // Force a complete state update by creating new objects with fresh references
+      const freshData = newData.map((item, index) => ({ 
+        address: String(item.address), 
+        score: Number(item.score),
+        _key: `${item.address}-${item.score}-${Date.now()}-${index}` // Add unique key
+      }));
+      
+      // Compare data to see if it changed
+      const prevStr = JSON.stringify(previousData.map(d => ({ address: d.address, score: d.score })));
+      const newStr = JSON.stringify(freshData.map(d => ({ address: d.address, score: d.score })));
+      const dataChanged = prevStr !== newStr;
+      
+      if (dataChanged) {
+        console.log('📊 Scoreboard data changed - updating UI');
+      } else {
+        console.log('⚠️ Scoreboard data unchanged - but forcing re-render anyway');
+      }
+      
+      // Always update state, even if data appears the same (to force re-render)
+      // Use a small delay to ensure React processes the state change
+      await new Promise(resolve => setTimeout(resolve, 10));
+      setData(freshData.map(({ _key, ...item }) => item)); // Remove _key before setting state
+      
     } catch (e: any) {
       console.error('❌ Error fetching top scores:', e);
       setError(e?.message || 'parse failed');
@@ -87,6 +139,6 @@ export function useGetTopScores() {
     }
   }, [network.apiAddress]);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => { refresh(false); }, [refresh]); // Initial load without force refresh
   return { data, loading, error, refresh };
 }

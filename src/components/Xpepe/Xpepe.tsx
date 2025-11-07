@@ -34,7 +34,7 @@ const DinoGameComponent: React.FC<XpepeProps> = ({ onGameOver, onScoreChange }) 
   const { nftSprites, hasAnyNft, ownsBringsAdoption, ownsIzBack } = useXpepeNfts();
 
   useEffect(() => {
-    gameRef.current = new DinoGame({ onGameOver, onScoreChange, autoStart: true });
+    gameRef.current = new DinoGame({ onGameOver, onScoreChange, autoStart: false });
     return () => {
       try {
         gameRef.current?.pauseGame?.();
@@ -90,8 +90,8 @@ const DinoGameComponent: React.FC<XpepeProps> = ({ onGameOver, onScoreChange }) 
 
         <div className="score" id="score">00000</div>
         <div className="game-over" id="gameOver" style={{ display: 'none' }}>
-          <h2>G A M E &nbsp; O V E R</h2>
-          <p>Press SPACE to restart</p>
+          <h2></h2>
+          <p>Press S to start</p>
         </div>
       </div>
     </div>

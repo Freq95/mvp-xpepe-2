@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { OutputContainer, Button } from 'components';
 import { useGetAllAddresses, useGetAddressDetails } from 'hooks/analytics';
 import { useGetTopScores } from 'hooks/transactions/useGetTopScores';
-import { Address, useGetAccount, useGetLoginInfo } from 'lib';
+import { Address, useGetAccount, useGetLoginInfo, getActiveTransactionsStatus } from 'lib';
 
 export const GameAnalytics: React.FC = () => {
   const { addresses, loading, error, refetch } = useGetAllAddresses();
@@ -11,18 +11,82 @@ export const GameAnalytics: React.FC = () => {
   const { isLoggedIn } = useGetLoginInfo();
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { details, loading: detailsLoading } = useGetAddressDetails(selectedAddress);
   
+  // Track previous transaction success state to detect when transactions complete
+  const prevSuccessRef = useRef<boolean>(false);
+  
   // Handler to refresh both backend addresses and on-chain scores
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     console.log('🔄 Refresh button clicked - refreshing both sources...');
-    // Refresh both sources - await to ensure they complete
-    await Promise.all([
-      refetch(),
-      refreshTopScores()
-    ]);
-    console.log('✅ Refresh complete');
-  };
+    setIsRefreshing(true);
+    
+    // Update refresh key to force re-render
+    setRefreshKey(prev => prev + 1);
+    
+    try {
+      // Refresh both sources with force refresh for on-chain data
+      await Promise.all([
+        refetch(), // Refresh backend/DB data
+        refreshTopScores(true) // Refresh on-chain top scores with force flag (cache-busted)
+      ]);
+      
+      // Small delay to ensure state updates propagate
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Update refresh key again to force re-render with new data
+      setRefreshKey(prev => prev + 1);
+      console.log('✅ Refresh complete');
+    } catch (error) {
+      console.error('❌ Error refreshing:', error);
+      setRefreshKey(prev => prev + 1);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [refetch, refreshTopScores]);
+  
+  // Auto-refresh after transactions complete
+  useEffect(() => {
+    let refreshTimeout: NodeJS.Timeout | null = null;
+    
+    const interval = setInterval(() => {
+      const { success } = getActiveTransactionsStatus();
+      
+      // Only refresh if success changed from false to true (transaction just completed)
+      if (success && !prevSuccessRef.current) {
+        console.log('🔄 Transaction completed - will refresh GameAnalytics after delay...');
+        
+        // Clear any existing timeout
+        if (refreshTimeout) {
+          clearTimeout(refreshTimeout);
+        }
+        
+        // Wait for the blockchain to update after transaction
+        refreshTimeout = setTimeout(() => {
+          console.log('🔄 Auto-refreshing GameAnalytics now...');
+          handleRefresh();
+        }, 5000); // 5 second delay to allow blockchain to process the transaction
+
+        prevSuccessRef.current = success;
+      } else if (!success) {
+        // Reset the ref when success becomes false again
+        prevSuccessRef.current = false;
+        if (refreshTimeout) {
+          clearTimeout(refreshTimeout);
+          refreshTimeout = null;
+        }
+      }
+    }, 1000); // Check every second
+
+    return () => {
+      clearInterval(interval);
+      if (refreshTimeout) {
+        clearTimeout(refreshTimeout);
+      }
+    };
+  }, [handleRefresh]);
   
   // Helper function to normalize addresses to bech32 format
   const normalizeAddress = (addr: string): string => {
@@ -151,7 +215,9 @@ export const GameAnalytics: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold"></h3>
-          <Button onClick={handleRefresh}>Refresh</Button>
+          <Button onClick={handleRefresh} disabled={isRefreshing || loading}>
+            {isRefreshing || loading ? 'Refreshing...' : 'Refresh'}
+          </Button>
         </div>
         <OutputContainer>
           <div className="text-center py-8 opacity-70">Loading...</div>
@@ -165,7 +231,9 @@ export const GameAnalytics: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold"></h3>
-          <Button onClick={handleRefresh}>Refresh</Button>
+          <Button onClick={handleRefresh} disabled={isRefreshing || loading}>
+            {isRefreshing || loading ? 'Refreshing...' : 'Refresh'}
+          </Button>
         </div>
         <OutputContainer>
           <div className="text-center py-8 text-red-500">
@@ -182,7 +250,9 @@ export const GameAnalytics: React.FC = () => {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold"></h3>
-        <Button onClick={refetch}>Refresh</Button>
+        <Button onClick={handleRefresh} disabled={isRefreshing || loading}>
+          {isRefreshing || loading ? 'Refreshing...' : 'Refresh'}
+        </Button>
       </div>
 
 
@@ -312,8 +382,8 @@ export const GameAnalytics: React.FC = () => {
             </div>
             
             {addressesWithPosition.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto" key={`table-container-${refreshKey}`}>
+                <table className="w-full text-sm" key={`analytics-table-${refreshKey}`}>
                   <thead>
                     <tr className="text-left opacity-70 border-b">
                       <th className="py-2 px-3">address</th>

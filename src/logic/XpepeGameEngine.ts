@@ -167,16 +167,62 @@ export default class DinoGame {
     if (!this.overlayEl) return;
     this.overlayEl.style.display = kind ? 'block' : 'none';
     this.overlayEl.setAttribute('data-state', kind ?? 'hidden');
+    
+    // Update overlay content based on state
+    if (kind === 'idle') {
+      const h2 = this.overlayEl.querySelector('h2');
+      const p = this.overlayEl.querySelector('p');
+      if (h2) h2.textContent = '';
+      if (p) p.textContent = 'Press S to start';
+    } else if (kind === 'gameover') {
+      const h2 = this.overlayEl.querySelector('h2');
+      const p = this.overlayEl.querySelector('p');
+      if (h2) h2.textContent = 'G A M E   O V E R';
+      if (p) p.textContent = 'Press S to restart';
+    } else if (kind === 'paused') {
+      const h2 = this.overlayEl.querySelector('h2');
+      const p = this.overlayEl.querySelector('p');
+      if (h2) h2.textContent = 'P A U S E D';
+      if (p) p.textContent = 'Press S to resume';
+    }
   }
 
   private attachInput() {
     const key = (e: KeyboardEvent, down: boolean) => {
       const code = e.code;
       if (["ArrowUp", "Space", "KeyW"].includes(code)) { if (down) this.input.justJump = true; this.input.jump = down; e.preventDefault(); }
-      if (["ArrowDown", "KeyS"].includes(code)) { this.input.down = down; e.preventDefault(); }
+      
+      // Handle "S" key: ONLY for start/restart, nothing else
+      if (code === 'KeyS') {
+        if (down) {
+          if (this.phase === 'idle') {
+            // Start game when idle
+            this.phase = 'running';
+            this.setOverlay(null);
+            this.last = performance.now();
+            this.jump();
+            e.preventDefault();
+          } else if (this.phase === 'gameover') {
+            // Restart game when gameover - reset and start immediately
+            this.reset();
+            this.phase = 'running';
+            this.setOverlay(null);
+            this.last = performance.now();
+            this.jump();
+            e.preventDefault();
+          }
+          // Do nothing if game is running - S key is disabled during gameplay
+        }
+      }
+      
+      // ArrowDown for duck (only works when running)
+      if (code === "ArrowDown" && this.phase === 'running') { 
+        this.input.down = down; 
+        e.preventDefault(); 
+      }
+      
       if (down && code === 'KeyR') { this.restartGame(); }
-      if (down && code === 'Space' && this.phase === 'gameover') { this.restartGame(); }
-      if (down && code === 'Space' && this.phase === 'idle') { this.phase = 'running'; this.setOverlay(null); this.jump(); }
+      // Space key is only for jumping during gameplay, not for start/restart
     };
     const kd = (e: KeyboardEvent) => key(e, true);
     const ku = (e: KeyboardEvent) => key(e, false);
