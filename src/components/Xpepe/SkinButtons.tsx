@@ -14,11 +14,11 @@ type Props = {
 
 export function SkinButtons({ selectedKey, onSelect, choices, nftSprites, hasAnyNft, ownsBringsAdoption, ownsIzBack }: Props) {
   return (
-    <div className="flex gap-4 flex-wrap">
+    <div className="flex gap-4 flex-wrap mt-[15px]">
       {/* Default */}
       <button
         onClick={() => onSelect(DEFAULT_CONFIG, 'default')}
-        className={`p-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === 'default' ? 'ring-2 ring-yellow-400' : ''}`}
+        className={`px-5 pt-9 pb-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === 'default' ? 'ring-2 ring-yellow-400' : ''}`}
         title="Default skin"
       >
         <ComposedCharacter config={DEFAULT_CONFIG} />
@@ -30,7 +30,7 @@ export function SkinButtons({ selectedKey, onSelect, choices, nftSprites, hasAny
         <button
           key={idx}
           onClick={() => onSelect(cfg, `choice-${idx}`)}
-          className={`p-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === `choice-${idx}` ? 'ring-2 ring-yellow-400' : ''}`}
+          className={`px-5 pt-9 pb-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === `choice-${idx}` ? 'ring-2 ring-yellow-400' : ''}`}
           title="Random skin"
         >
           <ComposedCharacter config={cfg} />
@@ -48,7 +48,7 @@ export function SkinButtons({ selectedKey, onSelect, choices, nftSprites, hasAny
           <button
             key={n.identifier}
             onClick={() => onSelect(generateRandomConfig(), `nft-${n.identifier}`)}
-            className={`p-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition`}
+            className={`px-5 pt-9 pb-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition`}
             title={n.name}
           >
             <img src={n.media?.[0]?.url} alt={n.name} className="w-12 h-12 object-contain" />
@@ -60,7 +60,7 @@ export function SkinButtons({ selectedKey, onSelect, choices, nftSprites, hasAny
       {ownsBringsAdoption && (
         <button
           onClick={() => onSelect({ oneofone: 'pepe_trump.png', templates: 'none', mouth: 'none', eyes: 'none', body: 'none', feet: 'feet_default.png', head: 'none' } as CharConfig, 'nft-trump')}
-          className={`p-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === 'nft-trump' ? 'ring-2 ring-yellow-400' : ''}`}
+          className={`px-5 pt-9 pb-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === 'nft-trump' ? 'ring-2 ring-yellow-400' : ''}`}
           title="trump 1/1"
         >
           <ComposedCharacter config={{ oneofone: 'pepe_trump.png', templates: 'none', mouth: 'none', eyes: 'none', body: 'none', feet: 'feet_default.png', head: 'none' } as CharConfig} />
@@ -71,7 +71,7 @@ export function SkinButtons({ selectedKey, onSelect, choices, nftSprites, hasAny
       {ownsIzBack && (
         <button
           onClick={() => onSelect({ oneofone: 'template_logo.png', templates: 'none', mouth: 'none', eyes: 'none', body: 'none', feet: 'feet_black_1o1.png', head: 'none' } as CharConfig, 'nft-black')}
-          className={`p-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === 'nft-black' ? 'ring-2 ring-yellow-400' : ''}`}
+          className={`px-5 pt-9 pb-2 border rounded-xl flex flex-col items-center hover:shadow-lg transition ${selectedKey === 'nft-black' ? 'ring-2 ring-yellow-400' : ''}`}
           title="black 1/1"
         >
           <ComposedCharacter config={{ oneofone: 'template_logo.png', templates: 'none', mouth: 'none', eyes: 'none', body: 'none', feet: 'feet_black_1o1.png', head: 'none' } as CharConfig} />

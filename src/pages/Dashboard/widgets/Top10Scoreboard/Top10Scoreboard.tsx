@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { useGetTopScores } from 'hooks/transactions/useGetTopScores';
 import { Button, OutputContainer } from 'components';
 import { Address, getActiveTransactionsStatus } from 'lib';
-import { useGetAllAddresses } from 'hooks/analytics';
+import { useGetAllAddresses, useGetAllConnectedUsers } from 'hooks/analytics';
 
 function formatAddress(addr: string): string {
   try {
@@ -18,13 +18,68 @@ function formatAddress(addr: string): string {
 }
 
 export const Top10Scoreboard: React.FC = () => {
-  const { data, loading, error, refresh } = useGetTopScores();
+  const { data: onChainScores, loading, error, refresh } = useGetTopScores();
   const { refetch: refetchBackendData } = useGetAllAddresses();
+  const { connections, refetch: refetchConnections } = useGetAllConnectedUsers();
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Track previous transaction success state to detect when transactions complete
   const prevSuccessRef = useRef<boolean>(false);
+
+  // Merge on-chain scores with connected users (add users with 0 score if not in on-chain)
+  const mergedData = useMemo(() => {
+    // Create a map of on-chain scores by address (normalized to bech32)
+    const scoreMap = new Map<string, number>();
+    onChainScores?.forEach(item => {
+      try {
+        const normalizedAddr = formatAddress(item.address);
+        scoreMap.set(normalizedAddr.toLowerCase(), item.score);
+      } catch {
+        scoreMap.set(item.address.toLowerCase(), item.score);
+      }
+    });
+
+    // Add all connected users with their scores (0 if not on-chain)
+    const allEntries: Array<{ address: string; score: number }> = [];
+    
+    // First, add all on-chain scores
+    onChainScores?.forEach(item => {
+      try {
+        const normalizedAddr = formatAddress(item.address);
+        allEntries.push({ address: normalizedAddr, score: item.score });
+      } catch {
+        allEntries.push({ address: item.address, score: item.score });
+      }
+    });
+
+    // Then, add connected users that don't have on-chain scores
+    connections?.forEach(conn => {
+      try {
+        const normalizedAddr = formatAddress(conn.address);
+        const lowerAddr = normalizedAddr.toLowerCase();
+        if (!scoreMap.has(lowerAddr)) {
+          allEntries.push({ address: normalizedAddr, score: 0 });
+        }
+      } catch {
+        const lowerAddr = conn.address.toLowerCase();
+        if (!scoreMap.has(lowerAddr)) {
+          allEntries.push({ address: conn.address, score: 0 });
+        }
+      }
+    });
+
+    // Sort by score descending, then by address for consistency
+    allEntries.sort((a, b) => {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+      return a.address.localeCompare(b.address);
+    });
+
+    // Return top entries (or all if less than limit)
+    return allEntries;
+  }, [onChainScores, connections]);
 
   // Handler to refresh both on-chain and backend data
   const handleRefresh = useCallback(async () => {
@@ -38,7 +93,8 @@ export const Top10Scoreboard: React.FC = () => {
     try {
       await Promise.all([
         refresh(true), // Refresh on-chain top scores with force flag
-        refetchBackendData() // Refresh backend/DB data
+        refetchBackendData(), // Refresh backend/DB data
+        refetchConnections() // Refresh connected users
       ]);
       
       // Small delay to ensure state updates propagate
@@ -54,7 +110,7 @@ export const Top10Scoreboard: React.FC = () => {
     } finally {
       setIsRefreshing(false);
     }
-  }, [refresh, refetchBackendData]);
+  }, [refresh, refetchBackendData, refetchConnections]);
 
   // Poll transaction status periodically to detect completion
   useEffect(() => {
@@ -120,7 +176,7 @@ export const Top10Scoreboard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.map((r, i) => (
+              {mergedData?.map((r, i) => (
                 <tr key={`${r.address}-${r.score}-${refreshKey}-${i}`} className="border-t">
                   <td className="py-2 pr-2 w-10">{i + 1}</td>
                   <td className="py-2 break-all font-mono">
@@ -129,7 +185,7 @@ export const Top10Scoreboard: React.FC = () => {
                   <td className="py-2 text-right font-semibold">{r.score}</td>
                 </tr>
               ))}
-              {(!data || data.length === 0) && !loading && (
+              {(!mergedData || mergedData.length === 0) && !loading && (
                 <tr>
                   <td colSpan={3} className="py-6 text-center opacity-70">
                     No entries

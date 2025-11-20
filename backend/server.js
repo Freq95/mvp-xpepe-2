@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import scoringSessionRoutes from './routes/scoringSessions.js';
 import blockchainSubmissionRoutes from './routes/blockchainSubmissions.js';
 import addressRoutes from './routes/addresses.js';
+import userConnectionRoutes from './routes/userConnections.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/scoring-sessions', scoringSessionRoutes);
 app.use('/api/blockchain-submissions', blockchainSubmissionRoutes);
 app.use('/api/addresses', addressRoutes);
+app.use('/api/user-connections', userConnectionRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -1,13 +1,22 @@
 import express from 'express';
 import ScoringSession from '../models/ScoringSession.js';
+import UserConnection from '../models/UserConnection.js';
 
 const router = express.Router();
 
 // GET /api/addresses - Get all addresses with summary statistics
+// Now includes all connected users, not just those who played
 router.get('/', async (req, res) => {
   try {
-    // Get all unique addresses from scoring sessions
-    const allAddresses = await ScoringSession.distinct('address');
+    // Get all unique addresses from scoring sessions (players)
+    const playerAddresses = await ScoringSession.distinct('address');
+    
+    // Get all unique addresses from user connections (all connected users)
+    const connectedAddresses = await UserConnection.distinct('address');
+    
+    // Combine and deduplicate addresses
+    const allAddressesSet = new Set([...playerAddresses, ...connectedAddresses]);
+    const allAddresses = Array.from(allAddressesSet);
 
     // Get statistics for each address
     const addressesWithStats = await Promise.all(

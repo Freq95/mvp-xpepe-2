@@ -4,7 +4,7 @@ import DinoGame from '../../logic/XpepeGameEngine';
 import { CharacterId } from './characters';
 import { ComposedCharacter } from './ComposedCharacter';
 import { SkinButtons } from './SkinButtons';
-import { DEFAULT_CONFIG, generateRandomConfig, CharConfig } from './constants/traits';
+import { DEFAULT_CONFIG, generateRandomConfig, CharConfig, LayerName } from './constants/traits';
 import { useXpepeNfts } from '../../hooks/useXpepeNfts';
 
 // NFT to character mapping table (still present for legacy)
@@ -65,16 +65,18 @@ const DinoGameComponent: React.FC<XpepeProps> = ({ onGameOver, onScoreChange }) 
   };
 
   return (
-    <div className="flex flex-col gap-4 items-center">
-      <SkinButtons
-        selectedKey={selectedKey}
-        onSelect={(cfg: CharConfig, key: string) => { setCharConfig(cfg); setSelectedKey(key); }}
-        choices={choices}
-        nftSprites={nftSprites}
-        hasAnyNft={hasAnyNft}
-        ownsBringsAdoption={ownsBringsAdoption}
-        ownsIzBack={ownsIzBack}
-      />
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex justify-center">
+        <SkinButtons
+          selectedKey={selectedKey}
+          onSelect={(cfg: CharConfig, key: string) => { setCharConfig(cfg); setSelectedKey(key); }}
+          choices={choices}
+          nftSprites={nftSprites}
+          hasAnyNft={hasAnyNft}
+          ownsBringsAdoption={ownsBringsAdoption}
+          ownsIzBack={ownsIzBack}
+        />
+      </div>
 
 
       {/* 🔹 Jocul */}

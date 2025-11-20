@@ -1,11 +1,13 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { DashboardHeader, LeftPanel, Widget } from './components';
 
 import { WidgetType } from 'types/widget.types';
 import { GameScoreSubmitOnChoice } from './widgets/SubmitGameScore';
 import { NftDashboard } from './widgets/NftDashboard';
 import styles from './dashboard.styles';
+import { useGetAccount, useGetLoginInfo } from 'lib';
+import { useRecordUserConnection } from 'hooks/analytics';
 
 import {
   Transactions,
@@ -34,6 +36,22 @@ const widgetsBySection: Record<string, WidgetType[]> = {
 export const Dashboard = () => {
   const [isMobilePanelOpen, setIsMobilePanelOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('scoreboard');
+  const { address } = useGetAccount();
+  const { isLoggedIn } = useGetLoginInfo();
+  const { recordConnection } = useRecordUserConnection();
+  const hasRecordedConnection = useRef(false);
+
+  // Track user connection when they log in
+  useEffect(() => {
+    if (isLoggedIn && address && !hasRecordedConnection.current) {
+      recordConnection(address);
+      hasRecordedConnection.current = true;
+    }
+    // Reset when user logs out
+    if (!isLoggedIn) {
+      hasRecordedConnection.current = false;
+    }
+  }, [isLoggedIn, address, recordConnection]);
 
   useEffect(() => {
     if ('scrollRestoration' in history) {

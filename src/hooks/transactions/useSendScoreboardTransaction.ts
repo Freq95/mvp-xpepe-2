@@ -42,9 +42,39 @@ export function useSendScoreboardTransaction() {
     return scFactory;
   };
 
+  // Convert scientific notation string to BigInt-safe string (integer only)
+  function scientificToBigIntString(value: string): string {
+    if (!value.includes('e') && !value.includes('E')) {
+      return value.split('.')[0]; // Return only integer part
+    }
+    
+    const [base, exponent] = value.toLowerCase().split('e');
+    const exp = parseInt(exponent, 10);
+    const [intPart, decPart = ''] = base.split('.');
+    
+    if (exp > 0) {
+      // Positive exponent: move decimal point right
+      const totalDecimals = decPart.length;
+      if (exp >= totalDecimals) {
+        // No decimal part left, just add zeros
+        return intPart + decPart + '0'.repeat(exp - totalDecimals);
+      } else {
+        // Some decimal part remains, but we only want integer part
+        return intPart + decPart.slice(0, exp);
+      }
+    } else {
+      // Negative exponent: result is less than 1, return 0 for BigInt
+      return '0';
+    }
+  }
+
   async function submitScoreFromAbi(score: number, minFeeWei: string | bigint) {
     // Always use BigInt for ESDT transfer amount: NEVER use Number for ESDT base units
-    const bigIntFee = typeof minFeeWei === 'bigint' ? minFeeWei : BigInt(minFeeWei);
+    // Handle scientific notation in string format
+    const feeString = typeof minFeeWei === 'bigint' ? minFeeWei.toString() : minFeeWei;
+    const bigIntFee = typeof minFeeWei === 'bigint' 
+      ? minFeeWei 
+      : BigInt(scientificToBigIntString(feeString));
     console.log("DEBUG submitScoreFromAbi: score:", score, "minFeeWei:", minFeeWei, "as BigInt:", bigIntFee);
 
     const scFactory = await getSmartContractFactory();

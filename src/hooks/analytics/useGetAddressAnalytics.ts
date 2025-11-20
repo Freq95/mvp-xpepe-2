@@ -85,3 +85,37 @@ export function useGetAddressDetails(address: string | null) {
   return { details, loading, error, refetch: fetchDetails };
 }
 
+export interface UserConnection {
+  address: string;
+  firstConnectedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export function useGetAllConnectedUsers() {
+  const [connections, setConnections] = useState<UserConnection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchConnections = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.get(`${ANALYTICS_API_URL}/api/user-connections`);
+      setConnections(response.data.data || []);
+    } catch (err: any) {
+      console.error('Failed to fetch connected users:', err);
+      setError(err.message || 'Failed to fetch connected users');
+      setConnections([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchConnections();
+  }, []);
+
+  return { connections, loading, error, refetch: fetchConnections };
+}
+

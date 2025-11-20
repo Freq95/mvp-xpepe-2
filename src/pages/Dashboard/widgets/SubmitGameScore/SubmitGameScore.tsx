@@ -18,6 +18,32 @@ function toEgld(wei?: string | null, digits = 4) {
   }
 }
 
+// Convert scientific notation string to BigInt-safe string (integer only)
+function scientificToBigIntString(value: string): string {
+  if (!value.includes('e') && !value.includes('E')) {
+    return value.split('.')[0]; // Return only integer part
+  }
+  
+  const [base, exponent] = value.toLowerCase().split('e');
+  const exp = parseInt(exponent, 10);
+  const [intPart, decPart = ''] = base.split('.');
+  
+  if (exp > 0) {
+    // Positive exponent: move decimal point right
+    const totalDecimals = decPart.length;
+    if (exp >= totalDecimals) {
+      // No decimal part left, just add zeros
+      return intPart + decPart + '0'.repeat(exp - totalDecimals);
+    } else {
+      // Some decimal part remains, but we only want integer part
+      return intPart + decPart.slice(0, exp);
+    }
+  } else {
+    // Negative exponent: result is less than 1, return 0 for BigInt
+    return '0';
+  }
+}
+
 function prettyTxError(err: any, opts: { minFeeWei?: string | null } = {}) {
   const msg = (typeof err === 'string' ? err : err?.message || '').toLowerCase();
   if (!msg) return 'Unknown error during signing/sending.';
@@ -116,7 +142,9 @@ export function GameScoreSubmitOnChoice(): JSX.Element {
     const hasEnoughEgld = egldBalanceWei >= minEgldForGas;
 
     // Check xPEPE balance (need minFeeWei amount)
-    const minFee = BigInt(minFeeWei);
+    // Convert minFeeWei to BigInt, handling scientific notation
+    const minFeeStr = scientificToBigIntString(minFeeWei);
+    const minFee = BigInt(minFeeStr.split('.')[0]); // Take only integer part
     const xpepeBalanceWei = BigInt(xpepeBalance || '0');
     const hasEnoughXpepe = xpepeBalanceWei >= minFee;
 
@@ -189,7 +217,7 @@ export function GameScoreSubmitOnChoice(): JSX.Element {
         </Button>
       </div>
 
-      <OutputContainer>
+      <OutputContainer className="p-0">
         <div className="flex flex-col gap-3">
           <DinoGameComponent onGameOver={handleGameOver} />
 
