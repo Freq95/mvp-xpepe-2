@@ -43,3 +43,4 @@ wallet
 
 /contract*
 /contract_backup*
+.vercel

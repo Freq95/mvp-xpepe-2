@@ -35,10 +35,20 @@ export function useGetAllAddresses() {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get(`${ANALYTICS_API_URL}/api/addresses`);
+      const apiUrl = `${ANALYTICS_API_URL}/api/addresses`;
+      console.log('🔍 Fetching addresses from:', apiUrl);
+      console.log('🔍 ANALYTICS_API_URL value:', ANALYTICS_API_URL);
+      const response = await axios.get(apiUrl);
+      console.log('✅ Successfully fetched addresses:', response.data);
       setAddresses(response.data.data || []);
     } catch (err: any) {
-      console.error('Failed to fetch addresses:', err);
+      console.error('❌ Failed to fetch addresses:', err);
+      console.error('❌ Error details:', {
+        message: err.message,
+        code: err.code,
+        response: err.response?.data,
+        url: err.config?.url
+      });
       setError(err.message || 'Failed to fetch addresses');
       setAddresses([]);
     } finally {

@@ -1,0 +1,22 @@
+# Exclude large folders that aren't needed for frontend deployment
+/contract
+/contract_backup
+/backend
+/build
+/node_modules
+/backend/node_modules
+/test-results
+/playwright-report
+/playwright/.cache
+/temps
+/certificates
+
+# Exclude test files
+/tests
+test-api.html
+
+# Exclude development files
+*.md
+!README.md
+.pnpm-store
+

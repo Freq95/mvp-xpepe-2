@@ -1,0 +1,9 @@
+{
+  "buildCommand": "pnpm run build-devnet",
+  "outputDirectory": "build",
+  "installCommand": "pnpm install",
+  "env": {
+    "VITE_ANALYTICS_API_URL": "https://mvx-xpepe.vercel.app"
+  }
+}
+

@@ -32,4 +32,36 @@ export const walletConnectDeepLink =
   process.env.WALLET_CONNECT_DEEP_LINK ?? undefined;
 
 // API configuration
-export const ANALYTICS_API_URL = process.env.VITE_ANALYTICS_API_URL || 'http://localhost:3001';
+// Note: Vercel environment variables may not be passed to Vite build
+// This fallback detects production and uses the deployed backend
+const getBackendUrl = () => {
+  // First, try environment variable (works if Vercel passes it)
+  if (process.env.VITE_ANALYTICS_API_URL) {
+    return process.env.VITE_ANALYTICS_API_URL;
+  }
+  
+  // Fallback: detect environment from hostname
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    
+    // Local development
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:3001';
+    }
+    
+    // Production - use deployed backend
+    // TODO: Update this if backend URL changes
+    return 'https://mvx-xpepe.vercel.app';
+  }
+  
+  // Server-side or build time fallback
+  return 'http://localhost:3001';
+};
+
+export const ANALYTICS_API_URL = getBackendUrl();
+
+// Debug: Log the API URL (only in development or if explicitly enabled)
+if (typeof window !== 'undefined') {
+  console.log('🔍 ANALYTICS_API_URL configured as:', ANALYTICS_API_URL);
+  console.log('🔍 VITE_ANALYTICS_API_URL env var:', process.env.VITE_ANALYTICS_API_URL || 'NOT SET');
+}

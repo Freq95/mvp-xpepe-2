@@ -1,12 +1,9 @@
 // src/hooks/transactions/useSendScoreboardTransaction.ts
-import axios from 'axios';
-
 import { contractAddressScoreBoard } from 'config';
 import { signAndSendTransactions } from 'helpers';
 import {
   AbiRegistry,
   Address,
-  GAS_PRICE,
   SmartContractTransactionsFactory,
   TransactionsFactoryConfig,
   Token,
@@ -30,8 +27,8 @@ export function useSendScoreboardTransaction() {
   const proxy = new ProxyNetworkProvider(network.apiAddress);
 
   const getSmartContractFactory = async () => {
-    const response = await axios.get('src/contracts/scoreboard.abi.json');
-    const abi = AbiRegistry.create(response.data);
+    // Use the imported ABI instead of trying to fetch it via HTTP
+    const abi = AbiRegistry.create(scoreboardAbi);
     const scFactory = new SmartContractTransactionsFactory({
       config: new TransactionsFactoryConfig({
         chainID: network.chainId
