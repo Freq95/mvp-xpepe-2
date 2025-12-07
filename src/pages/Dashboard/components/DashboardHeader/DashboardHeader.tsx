@@ -6,6 +6,9 @@ import {
 } from 'localConstants';
 
 import { DashboardHeaderTextLink } from './components/DashboardHeaderTextLink';
+import { XPEPE_BUY_LINK, RouteNamesEnum } from 'localConstants';
+import xp_styles from '../../../Home/components/HomeHero/homeHero.styles';
+
 
 // prettier-ignore
 const styles = {
@@ -17,9 +20,23 @@ const styles = {
 
 export const DashboardHeader = () => (
   <div className={styles.dashboardHeaderContainer}>
-    <div className={styles.dashboardHeaderTitle}>welcome to xPEPE dApp</div>
+    {/* <div className={styles.dashboardHeaderTitle}>welcome to xPEPE dApp</div> */}
 
-    <div className={styles.dashboardHeaderDescription}>
+    <div className={styles.dashboardHeaderDescription}>    
+              <a
+                target='_blank'
+                rel='noreferrer'
+                href={XPEPE_BUY_LINK}
+                className={xp_styles.heroSectionTopDocButton}
+              >
+                <span className={xp_styles.heroSectionTopDocButtonText}>
+                  buy $xPEPE
+                </span>
+  
+              </a>
+            </div>
+
+    {/* <div className={styles.dashboardHeaderDescription}>
       <span className={styles.dashboardHeaderDescriptionText}>
         have some fun @
       </span>
@@ -28,6 +45,6 @@ export const DashboardHeader = () => (
         xpepeonmvx.com
       </DashboardHeaderTextLink>
 
-    </div>
+    </div> */}
   </div>
 );

@@ -4,6 +4,8 @@
   "installCommand": "pnpm install",
   "env": {
     "VITE_ANALYTICS_API_URL": "https://mvx-xpepe.vercel.app"
-  }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
-

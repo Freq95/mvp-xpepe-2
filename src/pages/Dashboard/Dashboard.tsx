@@ -35,7 +35,7 @@ const widgetsBySection: Record<string, WidgetType[]> = {
 
 export const Dashboard = () => {
   const [isMobilePanelOpen, setIsMobilePanelOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>('scoreboard');
+  const [activeSection, setActiveSection] = useState<string>('xpepe');
   const { address } = useGetAccount();
   const { isLoggedIn } = useGetLoginInfo();
   const { recordConnection } = useRecordUserConnection();

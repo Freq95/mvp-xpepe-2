@@ -19,8 +19,8 @@ type SideMenuPropsType = {
 };
 
 const menuItems = [
-  { title: 'scoreboard', icon: faTrophy, id: 'scoreboard' },
   { title: 'xPEPE game', icon: faGamepad, id: 'xpepe' },
+  { title: 'scoreboard', icon: faTrophy, id: 'scoreboard' },
   { title: 'NFTs', icon: faImagePortrait, id: 'nfts' },
   { title: 'transactions', icon: faWallet, id: 'transactions' },
   { title: 'market analysis', icon: faChartLine, id: 'market' }
@@ -28,7 +28,7 @@ const menuItems = [
 
 export const SideMenu = ({ setIsOpen, onSectionChange }: SideMenuPropsType) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState('scoreboard');
+  const [activeItem, setActiveItem] = useState('xpepe');
 
   const toggleCollapse = () => {
     setIsCollapsed((isCollapsed) => !isCollapsed);

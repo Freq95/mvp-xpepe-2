@@ -212,8 +212,8 @@ export function GameScoreSubmitOnChoice(): JSX.Element {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold"></h3>
-        <Button onClick={submitScore} disabled={!canSubmit}>
-          Send Score onChain
+        <Button onClick={submitScore} disabled={!canSubmit || true}>
+          on-chain score coming soon
         </Button>
       </div>
 

@@ -1,6 +1,6 @@
 import { faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FunctionComponent, SVGProps, useState } from 'react';
+import { FunctionComponent, SVGProps, useState, useEffect } from 'react';
 
 import { useHandleThemeManagement } from 'hooks';
 
@@ -104,6 +104,19 @@ export const ExtensionConnect2 = () => {
   const detectedBrowser = getDetectedBrowser();
   const icon = getBrowserIcon(detectedBrowser);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   return (
     <div className={styles.extensionCardContainer}>
@@ -133,15 +146,22 @@ export const ExtensionConnect2 = () => {
         </div>
       </div>
 
-      <div className={styles.extensionCardImage}>
+      <div className={styles.extensionCardImage} style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: isMobile ? 'auto' : undefined
+      }}>
           <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '20%',
-            transform: 'translate(-50%, -50%)',
-            width: '400px',
-            height: '400px',
-            zIndex: 2
+            position: isMobile ? 'relative' : 'absolute',
+            top: isMobile ? 'auto' : '50%',
+            left: isMobile ? 'auto' : '20%',
+            transform: isMobile ? 'none' : 'translate(-50%, -50%)',
+            width: isMobile ? 'min(280px, 80vw)' : isTablet ? '320px' : '400px',
+            height: isMobile ? 'min(280px, 80vw)' : isTablet ? '320px' : '400px',
+            zIndex: 2,
+            margin: isMobile ? '0 auto' : '0'
           }}>
           {/* Glow background */}
           <div style={{
@@ -192,15 +212,17 @@ export const ExtensionConnect2 = () => {
 
         {/* Legend */}
         <div style={{
-          position: 'absolute',
-          top: '50%',
-          right: '10%',
-          transform: 'translateY(-50%)',
+          position: isMobile ? 'relative' : 'absolute',
+          top: isMobile ? 'auto' : '50%',
+          right: isMobile ? 'auto' : '10%',
+          transform: isMobile ? 'none' : 'translateY(-50%)',
           display: 'flex',
           flexDirection: 'column',
           gap: '8px',
-          width: '200px',
-          zIndex: 3
+          width: isMobile ? '100%' : '200px',
+          marginTop: isMobile ? '1rem' : '0',
+          zIndex: 3,
+          padding: isMobile ? '0 1rem' : '0'
         }}>
           {data.map((entry, index) => (
             <div key={entry.name}

@@ -88,12 +88,17 @@ export default class DinoGame {
 
   // input
   private input = { jump: false, down: false, justJump: false };
+  private lastTapTime = 0;
+  private tapTimeout: number | null = null;
 
   // opts
   private opts: Required<Pick<DinoGameOptions, 'hiScoreKey' | 'autoStart'>> & { enemyClasses: { cactus: string; bird: string } };
   private resizeObs?: ResizeObserver;
+  private isTouchDevice: boolean;
 
   constructor(opts: DinoGameOptions = {}) {
+    // Detect touch device
+    this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     this.opts = {
       onScoreChange: opts.onScoreChange,
       onGameOver: opts.onGameOver,
@@ -147,7 +152,18 @@ export default class DinoGame {
   pauseGame() { if (this.phase === 'running') { this.phase = 'paused'; this.setOverlay('paused'); } }
   resumeGame() { if (this.phase === 'paused') { this.phase = 'running'; this.setOverlay(null); this.last = performance.now(); } }
   restartGame() { this.reset(); this.phase = this.opts.autoStart ? 'running' : 'idle'; this.setOverlay(this.phase === 'idle' ? 'idle' : null); this.last = performance.now(); }
-  destroy() { this.phase = 'destroyed'; if (this.raf) cancelAnimationFrame(this.raf); this.raf = null; this.obstacles.forEach(o => o.el.remove()); this.obstacles = []; this.resizeObs?.disconnect(); }
+  destroy() { 
+    this.phase = 'destroyed'; 
+    if (this.raf) cancelAnimationFrame(this.raf); 
+    this.raf = null; 
+    this.obstacles.forEach(o => o.el.remove()); 
+    this.obstacles = []; 
+    this.resizeObs?.disconnect();
+    if (this.tapTimeout) {
+      clearTimeout(this.tapTimeout);
+      this.tapTimeout = null;
+    }
+  }
   getScore() { return Math.floor(this.score); }
   getHiScore() { return Math.floor(this.hiscore); }
 
@@ -173,17 +189,17 @@ export default class DinoGame {
       const h2 = this.overlayEl.querySelector('h2');
       const p = this.overlayEl.querySelector('p');
       if (h2) h2.textContent = '';
-      if (p) p.textContent = 'Press S to start';
+      if (p) p.textContent = this.isTouchDevice ? 'Double tap to start' : 'Press S to start';
     } else if (kind === 'gameover') {
       const h2 = this.overlayEl.querySelector('h2');
       const p = this.overlayEl.querySelector('p');
       if (h2) h2.textContent = 'G A M E   O V E R';
-      if (p) p.textContent = 'Press S to restart';
+      if (p) p.textContent = this.isTouchDevice ? 'Double tap to restart' : 'Press S to restart';
     } else if (kind === 'paused') {
       const h2 = this.overlayEl.querySelector('h2');
       const p = this.overlayEl.querySelector('p');
       if (h2) h2.textContent = 'P A U S E D';
-      if (p) p.textContent = 'Press S to resume';
+      if (p) p.textContent = this.isTouchDevice ? 'Double tap to resume' : 'Press S to resume';
     }
   }
 
@@ -229,8 +245,70 @@ export default class DinoGame {
     window.addEventListener('keydown', kd);
     window.addEventListener('keyup', ku);
 
-    const pd = (e: PointerEvent) => { this.input.down = true; this.container.setPointerCapture(e.pointerId); };
-    const pu = (e: PointerEvent) => { this.input.down = false; this.input.justJump = true; this.container.releasePointerCapture(e.pointerId); };
+    const pd = (e: PointerEvent) => { 
+      // Handle double-tap start/restart on touch devices when game is idle or gameover
+      if (this.isTouchDevice && e.pointerType === 'touch') {
+        const currentTime = Date.now();
+        const timeSinceLastTap = currentTime - this.lastTapTime;
+        
+        // Clear any existing timeout
+        if (this.tapTimeout) {
+          clearTimeout(this.tapTimeout);
+          this.tapTimeout = null;
+        }
+        
+        // Check if this is a double tap (within 300ms of previous tap)
+        if (timeSinceLastTap < 300 && timeSinceLastTap > 0) {
+          // Double tap detected
+          if (this.phase === 'idle') {
+            this.phase = 'running';
+            this.setOverlay(null);
+            this.last = performance.now();
+            this.jump();
+            e.preventDefault();
+            this.lastTapTime = 0; // Reset
+            return;
+          } else if (this.phase === 'gameover') {
+            this.reset();
+            this.phase = 'running';
+            this.setOverlay(null);
+            this.last = performance.now();
+            this.jump();
+            e.preventDefault();
+            this.lastTapTime = 0; // Reset
+            return;
+          } else if (this.phase === 'paused') {
+            this.phase = 'running';
+            this.setOverlay(null);
+            this.last = performance.now();
+            e.preventDefault();
+            this.lastTapTime = 0; // Reset
+            return;
+          }
+        } else {
+          // First tap - wait for potential second tap
+          this.lastTapTime = currentTime;
+          this.tapTimeout = window.setTimeout(() => {
+            this.lastTapTime = 0; // Reset after timeout
+            this.tapTimeout = null;
+          }, 300);
+        }
+        
+        // Don't process as gameplay input if we're in idle/gameover/paused state
+        if (this.phase !== 'running') {
+          e.preventDefault();
+          return;
+        }
+      }
+      // Normal gameplay input
+      this.input.down = true; 
+      this.container.setPointerCapture(e.pointerId); 
+    };
+    const pu = (e: PointerEvent) => { 
+      this.input.down = false; 
+      this.input.justJump = true; 
+      this.container.releasePointerCapture(e.pointerId); 
+    };
     this.container.addEventListener('pointerdown', pd);
     this.container.addEventListener('pointerup', pu);
 
