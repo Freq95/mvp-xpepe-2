@@ -225,7 +225,7 @@ export function GameScoreSubmitOnChoice(): JSX.Element {
 
       const baseText =
         `Just scored ${emojiScore} in the $xPEPE runner on MultiversX!\n\n` +
-        `Join the fun and try to beat my score, for a change to win $eGLD!\n\n`;
+        `Join the fun and try to beat my score, for a chance to win $eGLD!\n\n`;
 
       const hashtags = 'xpepeRunner,MultiversX';
 
