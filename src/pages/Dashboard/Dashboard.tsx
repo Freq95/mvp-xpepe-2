@@ -17,19 +17,25 @@ import {
 
 const widgetsBySection: Record<string, WidgetType[]> = {
   scoreboard: [
-    { title: 'top players', widget: GameAnalytics, description: '', reference: '' }
+    { title: 'top players', widget: GameAnalytics, description: ''}
+    // { title: 'top players', widget: GameAnalytics, description: '', reference: 'disclaimer' }
+
   ],
   xpepe: [
-    { title: 'xPEPE game', widget: GameScoreSubmitOnChoice, description: '', reference: '' }
+    { title: 'xPEPE game', widget: GameScoreSubmitOnChoice, description: ''}
+    //{ title: 'xPEPE game', widget: GameScoreSubmitOnChoice, description: '', reference: 'disclaimer' }
   ],
   nfts: [
-    { title: 'NFT dashboard', widget: NftDashboard, description: '', reference: '' }
+    { title: 'NFT dashboard', widget: NftDashboard, description: ''}
+    // { title: 'NFT dashboard', widget: NftDashboard, description: '', reference: 'disclaimer' }
   ],
   transactions: [
-    { title: 'wallet transactions', widget: (props) => <Transactions identifier='transactions-ping-pong' {...props} />, description: '', reference: '' }
+    { title: 'wallet transactions', widget: (props) => <Transactions identifier='transactions-ping-pong' {...props} />, description: ''}
+    // { title: 'wallet transactions', widget: (props) => <Transactions identifier='transactions-ping-pong' {...props} />, description: '', reference: 'disclaimer' }
   ],
   market: [
-    { title: 'market analysis', widget: MarketAnalysis, description: '', reference: '' }
+    { title: 'market analysis', widget: MarketAnalysis, description: ''}
+    // { title: 'market analysis', widget: MarketAnalysis, description: '', reference: 'disclaimer' }
   ],
 };
 
