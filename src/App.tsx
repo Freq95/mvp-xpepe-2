@@ -1,12 +1,17 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
+import { IS_UNDER_DEVELOPMENT } from 'config';
 import { PageNotFound } from 'pages/PageNotFound/PageNotFound';
 import { routes } from 'routes';
 import { AxiosInterceptors, BatchTransactionsContextProvider } from 'wrappers';
 
-import { Layout } from './components';
+import { Layout, UnderDevelopment } from './components';
 
 export const App = () => {
+  if (IS_UNDER_DEVELOPMENT) {
+    return <UnderDevelopment />;
+  }
+
   return (
     <Router>
       <AxiosInterceptors>

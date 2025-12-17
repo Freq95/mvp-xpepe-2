@@ -12,3 +12,7 @@ export const contractAddressScoreBoard =
 
 export const environment = EnvironmentsEnum.devnet;
 export const sampleAuthenticatedDomains = [API_URL];
+
+// Set to true to show "Under Development" message instead of the app
+// When ready to launch, set this to false and redeploy
+export const IS_UNDER_DEVELOPMENT = true;
