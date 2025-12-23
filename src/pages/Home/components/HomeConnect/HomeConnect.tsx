@@ -170,7 +170,7 @@ export const HomeConnect = () => {
                   color: activeTheme?.identifier === 'mvx:light-theme' ? '#666666' : '#FFFFFF'
                 }}
               >
-                Q4 2025
+                Q1 2026
               </div>
               <div
                 className={styles.roadmapFeatures}
@@ -204,7 +204,7 @@ export const HomeConnect = () => {
                   color: activeTheme?.identifier === 'mvx:light-theme' ? '#666666' : '#FFFFFF'
                 }}
               >
-                Q1 2026
+                Q2 2026
               </div>
               <div
                 className={styles.roadmapFeatures}
@@ -238,7 +238,7 @@ export const HomeConnect = () => {
                   color: activeTheme?.identifier === 'mvx:light-theme' ? '#666666' : '#FFFFFF'
                 }}
               >
-                Q2 2026
+                Q3 2026
               </div>
               <div
                 className={styles.roadmapFeatures}
