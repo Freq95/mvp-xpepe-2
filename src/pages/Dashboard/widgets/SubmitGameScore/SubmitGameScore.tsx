@@ -221,7 +221,7 @@ export function GameScoreSubmitOnChoice(): JSX.Element {
     setIsSharing(true);
     try {
       const emojiScore = scoreToEmoji(lastFinal);
-      const shareUrl = 'xpepeonmvx.com/\n\n';
+      const shareUrl = 'https://xpepeonmvx.com\n\n';
 
       const baseText =
         `Just scored ${emojiScore} in the $xPEPE runner on MultiversX!\n\n` +
