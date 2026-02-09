@@ -14,7 +14,7 @@ type Props = {
 
 export function SkinButtons({ selectedKey, onSelect, choices, nftSprites, hasAnyNft, ownsBringsAdoption, ownsIzBack }: Props) {
   return (
-    <div className="flex gap-4 flex-wrap mt-[15px]">
+    <div className="flex gap-4 flex-wrap mt-[15mpx]">
       {/* Default */}
       <button
         onClick={() => onSelect(DEFAULT_CONFIG, 'default')}
